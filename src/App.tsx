@@ -1,24 +1,43 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { cipher, decipher, salt } from "./encrypt";
 
-interface Props {}
+export const App = (props: any) => {
+	const { code } = props.match.params;
+	const myCipher = cipher(salt);
+	const myDecipher = decipher(salt);
 
-const App = (props: Props) => {
-	const [text, setText] = useState("");
-	const [voice, setVoice] = useState(13);
-
-	// let voices: Array<SpeechSynthesisVoice>;
-	// const [voices, setVoices] = useState(Array<SpeechSynthesisVoice>());
 	const synth = window.speechSynthesis;
-	const voices: Array<SpeechSynthesisVoice> = synth.getVoices();
+	const [text, setText] = useState(code === undefined ? "" : myDecipher(code));
+	const [voice, setVoice] = useState(13);
+	const [voices, setVoices] = useState(Array<SpeechSynthesisVoice>());
 
 	useEffect(() => {
-		// if (voices.length === 0) getVoices();
-		console.log(text, voice);
+		getVoices();
+		if (!!code && code !== "") {
+			//console.log(myDecipher(code));
+			setTimeout(() => speakFunction(), 999);
+		}
+	}, []);
+
+	useEffect(() => {
+		//console.log(text, voice);
 	}, [text, voice]);
 
-	// const getVoices = async () => setVoices(await synth.getVoices());
+	useEffect(() => {
+		for (let i: number = 0; i < voices.length; i++) {
+			//console.log("Setting default voice");
+			if (voices[i].lang.includes("ja-JP")) {
+				//console.log(i);
+				setVoice(i);
+				break;
+			}
+		}
+	}, [voices]);
 
-	const onClickHandler = () => {
+	const getVoices = async () => setVoices(await synth.getVoices());
+
+	const speakFunction = () => {
+		//console.log(voice);
 		if (text === "") return;
 		//check if speaking
 		if (synth.speaking) {
@@ -27,7 +46,7 @@ const App = (props: Props) => {
 		}
 		let speakText = new SpeechSynthesisUtterance(text);
 		speakText.onend = (e) => {
-			console.log("Done speaking!");
+			//console.log("Done speaking!");
 		};
 
 		//speak error
@@ -42,31 +61,44 @@ const App = (props: Props) => {
 		synth.speak(speakText);
 	};
 
+	const copyCode = () => navigator.clipboard.writeText(myCipher(text));
+
 	return (
-		<div className='App'>
-			<header className='App-header'>
-				<input
-					type='text'
-					name='text'
-					value={text}
-					onChange={(event) => setText(event.target.value)}
-				/>
-				<select
-					id='cars'
-					value={voice}
-					onChange={(event) => setVoice(Number(event.target.value))}
-				>
-					{voices.length > 0 &&
-						voices.map(function (v, i) {
-							return (
-								<option key={i} value={i}>
-									{v.name} ({v.lang})
-								</option>
-							);
-						})}
-				</select>
-				<button onClick={onClickHandler}>Speak</button>
-			</header>
+		<div className='root blackbg'>
+			<br />
+			<br />
+			<input
+				className='container'
+				type='text'
+				name='text'
+				value={text}
+				onChange={(event) => setText(event.target.value)}
+			/>
+			<br />
+			<br />
+
+			<select
+				className='container'
+				value={voice}
+				onChange={(event) => setVoice(Number(event.target.value))}
+			>
+				{voices.length > 0 &&
+					voices.map(function (v, i) {
+						return (
+							<option key={i} value={i}>
+								{v.name} ({v.lang})
+							</option>
+						);
+					})}
+			</select>
+			<div className='container full'>
+				<div className='half'>
+					<button onClick={speakFunction}>Speak</button>
+				</div>
+				<div className='half'>
+					<button onClick={copyCode}>Share Link</button>
+				</div>
+			</div>
 		</div>
 	);
 };
