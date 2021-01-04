@@ -1,4 +1,4 @@
-export const salt: string = "salt";
+export const salt: string = "salty";
 
 export const cipher = (salt: string) => {
 	const textToChars = (text: string) =>
