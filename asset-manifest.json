@@ -1,0 +1,21 @@
+{
+  "files": {
+    "main.css": "/nolexa/static/css/main.a3e804c7.chunk.css",
+    "main.js": "/nolexa/static/js/main.4d9d8fd2.chunk.js",
+    "main.js.map": "/nolexa/static/js/main.4d9d8fd2.chunk.js.map",
+    "runtime-main.js": "/nolexa/static/js/runtime-main.7e774c09.js",
+    "runtime-main.js.map": "/nolexa/static/js/runtime-main.7e774c09.js.map",
+    "static/js/2.0cacf5bf.chunk.js": "/nolexa/static/js/2.0cacf5bf.chunk.js",
+    "static/js/2.0cacf5bf.chunk.js.map": "/nolexa/static/js/2.0cacf5bf.chunk.js.map",
+    "index.html": "/nolexa/index.html",
+    "static/css/main.a3e804c7.chunk.css.map": "/nolexa/static/css/main.a3e804c7.chunk.css.map",
+    "static/js/2.0cacf5bf.chunk.js.LICENSE.txt": "/nolexa/static/js/2.0cacf5bf.chunk.js.LICENSE.txt",
+    "static/media/robot-01-icon.cb06a77d.png": "/nolexa/static/media/robot-01-icon.cb06a77d.png"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.7e774c09.js",
+    "static/js/2.0cacf5bf.chunk.js",
+    "static/css/main.a3e804c7.chunk.css",
+    "static/js/main.4d9d8fd2.chunk.js"
+  ]
+}
