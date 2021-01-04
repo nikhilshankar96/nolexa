@@ -24,3 +24,7 @@ export const decipher = (salt: string) => {
 			.map((charCode: any) => String.fromCharCode(charCode))
 			.join("");
 };
+
+export const encodeVoice = (v: number) => String.fromCharCode(v + 96);
+
+export const decodeVoice = (v: string) => v.charCodeAt(0) - 96;

@@ -1,27 +1,29 @@
 import React, { useEffect, useState } from "react";
-import { cipher, decipher, salt } from "./encrypt";
+import { cipher, decipher, salt, encodeVoice, decodeVoice } from "./encrypt";
+import img from "./assets/robot-01-icon.png";
 
 export const App = (props: any) => {
 	const { code } = props.match.params;
 	const myCipher = cipher(salt);
 	const myDecipher = decipher(salt);
+	const url = "localhost:3000/";
 
 	const synth = window.speechSynthesis;
-	const [text, setText] = useState(code === undefined ? "" : myDecipher(code));
-	const [voice, setVoice] = useState(13);
+	const [voice, setVoice] = useState(
+		!!code ? decodeVoice(code.substring(0, 1)) : 13
+	);
+	const [text, setText] = useState(
+		code === undefined ? "" : myDecipher(code.slice(1))
+	);
 	const [voices, setVoices] = useState(Array<SpeechSynthesisVoice>());
 
 	useEffect(() => {
 		getVoices();
 		if (!!code && code !== "") {
-			//console.log(myDecipher(code));
-			setTimeout(() => speakFunction(), 999);
+			speakFunction();
+			setTimeout(() => speakFunction(), 666);
 		}
 	}, []);
-
-	useEffect(() => {
-		//console.log(text, voice);
-	}, [text, voice]);
 
 	useEffect(() => {
 		for (let i: number = 0; i < voices.length; i++) {
@@ -32,6 +34,7 @@ export const App = (props: any) => {
 				break;
 			}
 		}
+		if (!synth.speaking) speakFunction();
 	}, [voices]);
 
 	const getVoices = async () => setVoices(await synth.getVoices());
@@ -45,10 +48,6 @@ export const App = (props: any) => {
 			return;
 		}
 		let speakText = new SpeechSynthesisUtterance(text);
-		speakText.onend = (e) => {
-			//console.log("Done speaking!");
-		};
-
 		//speak error
 		speakText.onerror = (e) => {
 			console.error("something went wrong");
@@ -61,43 +60,71 @@ export const App = (props: any) => {
 		synth.speak(speakText);
 	};
 
-	const copyCode = () => navigator.clipboard.writeText(myCipher(text));
+	const copyCode = () => {
+		navigator.clipboard.writeText(url + encodeVoice(voice) + myCipher(text));
+		alert("Copied to clipboard, send it to someone!");
+	};
 
 	return (
-		<div className='root blackbg'>
+		<div className='container row'>
+			<h1 className=' center	'>Nolexa</h1>
+			<div className='center'>
+				<img className='responsive-img' src={img} style={{ maxHeight: 400 }} />
+			</div>
+			<div className='col s12'>
+				<input
+					style={{ color: "white" }}
+					type='text'
+					name='text'
+					value={text}
+					onChange={(event) => setText(event.target.value)}
+					placeholder={"Type something"}
+				/>
+			</div>
+			<div className='col s12'>
+				<select
+					value={voice}
+					onChange={(event) => setVoice(Number(event.target.value))}
+					className='browser-default'
+				>
+					{voices.length > 0 &&
+						voices.map(function (v, i) {
+							return (
+								<option key={i} value={i}>
+									{v.name} ({v.lang})
+								</option>
+							);
+						})}
+				</select>
+			</div>
 			<br />
-			<br />
-			<input
-				className='container'
-				type='text'
-				name='text'
-				value={text}
-				onChange={(event) => setText(event.target.value)}
-			/>
-			<br />
-			<br />
-
-			<select
-				className='container'
-				value={voice}
-				onChange={(event) => setVoice(Number(event.target.value))}
-			>
-				{voices.length > 0 &&
-					voices.map(function (v, i) {
-						return (
-							<option key={i} value={i}>
-								{v.name} ({v.lang})
-							</option>
-						);
-					})}
-			</select>
-			<div className='container full'>
-				<div className='half'>
-					<button onClick={speakFunction}>Speak</button>
+			<div className='row container col s12 center' style={{ marginTop: 20 }}>
+				<div className='col s6  center'>
+					<button
+						className='waves-effect waves-light btn-large cyan'
+						onClick={speakFunction}
+					>
+						Speak
+					</button>
 				</div>
-				<div className='half'>
-					<button onClick={copyCode}>Share Link</button>
+				<div className='col s6  center '>
+					<button
+						className='waves-effect waves-light btn-large purple'
+						onClick={copyCode}
+					>
+						Share
+					</button>
 				</div>
+			</div>
+			<div className='col s12 responsive-text '>
+				<p
+					className='red  center'
+					style={{ padding: 10, borderRadius: 8, fontSize: 9 }}
+				>
+					Nolexa is merely a dumb app built on a boring sunday afternoon, I take
+					no responsibility for whatever whoever sent you. Doesn't work on some
+					browsers.
+				</p>
 			</div>
 		</div>
 	);

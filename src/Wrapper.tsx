@@ -6,10 +6,12 @@ interface Props {}
 
 const Wrapper = (props: Props) => {
 	return (
-		<Router>
-			<Route path='/' exact component={App} {...props} />;
-			<Route path='/:code' component={App} {...props} />;
-		</Router>
+		<div className='root'>
+			<Router>
+				<Route path='/' exact component={App} {...props} />
+				<Route path='/:code' component={App} {...props} />
+			</Router>
+		</div>
 	);
 };
 
