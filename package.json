@@ -1,5 +1,4 @@
 {
-	"homepage": "https://nikhilshankar96.github.io/nolexa/",
 	"name": "nolexa",
 	"version": "0.1.0",
 	"private": false,
@@ -24,8 +23,7 @@
 		"build": "react-scripts build",
 		"test": "react-scripts test",
 		"eject": "react-scripts eject",
-		"predeploy": "npm run build",
-		"deploy": "gh-pages -d build"
+		"deploy": "npm run build && mv build/index.html build/200.html && surge build"
 	},
 	"eslintConfig": {
 		"extends": [

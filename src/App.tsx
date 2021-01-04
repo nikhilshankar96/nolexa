@@ -6,7 +6,7 @@ export const App = (props: any) => {
 	const { code } = props.match.params;
 	const myCipher = cipher(salt);
 	const myDecipher = decipher(salt);
-	const url = "https://nikhilshankar96.github.io/nolexa/";
+	const url = "https://nps.nolexa.surge.sh/";
 
 	const synth = window.speechSynthesis;
 	const [voice, setVoice] = useState(
