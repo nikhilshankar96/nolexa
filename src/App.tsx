@@ -6,11 +6,11 @@ export const App = (props: any) => {
 	const { code } = props.match.params;
 	const myCipher = cipher(salt);
 	const myDecipher = decipher(salt);
-	const url = "https://nps.nolexa.surge.sh/";
+	const url = "https://nolexa.nikhil-shankar.vercel.app/";
 
 	const synth = window.speechSynthesis;
 	const [voice, setVoice] = useState(
-		!!code ? decodeVoice(code.substring(0, 1)) : 13
+		!!code ? decodeVoice(code.substring(0, 1)) : 0
 	);
 	const [text, setText] = useState(
 		code === undefined ? "" : myDecipher(code.slice(1))
@@ -26,15 +26,10 @@ export const App = (props: any) => {
 	}, []);
 
 	useEffect(() => {
-		for (let i: number = 0; i < voices.length; i++) {
-			//console.log("Setting default voice");
-			if (voices[i].lang.includes("ja-JP")) {
-				//console.log(i);
-				setVoice(i);
-				break;
-			}
+		if (!!code && code !== "") {
+			speakFunction();
+			setTimeout(() => speakFunction(), 666);
 		}
-		if (!synth.speaking) speakFunction();
 	}, [voices]);
 
 	const getVoices = async () => setVoices(await synth.getVoices());
@@ -61,9 +56,12 @@ export const App = (props: any) => {
 	};
 
 	const copyCode = () => {
-		navigator.clipboard.writeText(url + encodeVoice(voice) + myCipher(text));
-		alert("Copied to clipboard, send it to someone!");
+		if (!!text) {
+			navigator.clipboard.writeText(url + encodeVoice(voice) + myCipher(text));
+			alert("Copied to clipboard, send it to someone!");
+		}
 	};
+	if (!synth.speaking) speakFunction();
 
 	return (
 		<div className='container row'>
